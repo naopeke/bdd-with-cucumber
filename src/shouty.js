@@ -1,15 +1,26 @@
 class Person {
-    moveTo(distance){
-        
+
+    constructor(){
+        this.location = 0;
+        this.messages = [];
     }
 
-    shout(message){
+    moveTo(distance){
+        this.location = distance;
+    }
 
+    shout(message, listener){
+        if (listener && Math.abs(listener.location - this.location) <= 15) {
+            listener.messages.push(message);
+        }
     }
 
     messagesHeard(){
-        return ["Free bagels at Sean's"]
+        // return ["Free bagels at Sean's"]
+        return this.messages;
     }
 }
+
+
 
 module.exports = Person;

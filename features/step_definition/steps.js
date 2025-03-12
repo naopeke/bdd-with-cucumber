@@ -11,7 +11,7 @@ Given('Lucy is located {int}m from Sean', function (distance){
 })
 
 When('Sean shouts {string}', function (message){
-    this.sean.shout(message);
+    this.sean.shout(message, this.lucy);
     this.message = message;
 })
 
