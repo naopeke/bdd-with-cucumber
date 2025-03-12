@@ -1,26 +1,46 @@
 class Person {
 
-    constructor(){
-        this.location = 0;
+    constructor(network){
+        // this.location = 0;
         this.messages = [];
+        this.network = network;
+        this.network.subscribe(this);
     }
 
-    moveTo(distance){
-        this.location = distance;
+    moveTo(distance) {
+
     }
 
     shout(message, listener){
-        if (this.location <= 15){
-            listener.messages.push(message);
-        }
+        this.network.broadcast(message);
+    }
+
+    hear(message){
+        this.messages.push(message);
     }
 
     messagesHeard(){
-        // return ["Free bagels at Sean's"]
         return this.messages;
+    }
+}
+
+class Network {
+    //broadcasts a message to all listeners
+    constructor(){
+        this.listeners = [];
+    }
+
+    subscribe(listener){
+        this.listeners.push(listener);
+    }
+
+    broadcast(message){
+        this.listeners.forEach(listener =>{
+            listener.hear(message);
+        })
     }
 }
 
 
 
-module.exports = Person;
+module.exports = { Person, Network };
