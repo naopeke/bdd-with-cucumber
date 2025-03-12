@@ -2,11 +2,11 @@ const Person = require('../../src/shouty.js');
 const { Given, When, Then } = require('@cucumber/cucumber');
 const { assertThat, is } = require('hamjest');
 
-Given('Lucy is located {int}m from Sean', function (distance){
+Given('{person} is located {int} metre(s) from Sean', function (lucy, distance){
     this.lucy = new Person();
     this.sean = new Person();
     this.lucy.moveTo(distance);
-    console.log(distance);
+    console.log("distance: ", distance);
     // return 'pending'
 })
 
