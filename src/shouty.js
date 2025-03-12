@@ -10,7 +10,7 @@ class Person {
     }
 
     shout(message, listener){
-        if (listener && Math.abs(listener.location - this.location) <= 15) {
+        if (this.location <= 15){
             listener.messages.push(message);
         }
     }
