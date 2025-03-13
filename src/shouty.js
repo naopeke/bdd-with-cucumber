@@ -1,46 +1,46 @@
 class Person {
-
-    constructor(network){
-        // this.location = 0;
+    constructor(network, location) {
         this.messages = [];
         this.network = network;
-        this.network.subscribe(this);
+        this.location = location; // 初期位置を設定
+        this.network.subscribe(this); // 自身をリスナーとして登録
     }
 
-    moveTo(distance) {
-
+    shout(message) {
+        this.network.broadcast(message, this.location); // Network にメッセージをブロードキャスト
     }
 
-    shout(message, listener){
-        this.network.broadcast(message);
+    hear(message) {
+        this.messages.push(message); // メッセージを受信
     }
 
-    hear(message){
-        this.messages.push(message);
-    }
-
-    messagesHeard(){
-        return this.messages;
+    messagesHeard() {
+        return this.messages; // 受信したメッセージを返す
     }
 }
 
 class Network {
-    //broadcasts a message to all listeners
-    constructor(){
+    constructor(range) {
+        this.range = range; // メッセージが届く範囲
         this.listeners = [];
     }
 
-    subscribe(listener){
-        this.listeners.push(listener);
+    subscribe(listener) {
+        this.listeners.push(listener); // リスナーを追加
     }
 
-    broadcast(message){
-        this.listeners.forEach(listener =>{
-            listener.hear(message);
-        })
+    broadcast(message, shouterLocation) {
+        this.listeners.forEach(listener => {
+            if (Math.abs(listener.location - shouterLocation) <= this.range) {
+                listener.hear(message); // 範囲内のリスナーにメッセージを送信
+            }
+        });
     }
 }
 
 
 
-module.exports = { Person, Network };
+module.exports = { 
+    Person,
+    Network
+};
