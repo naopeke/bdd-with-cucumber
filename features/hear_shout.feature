@@ -1,3 +1,4 @@
+@SHOUTY-11
 Feature: Hear shout
     shouty allows users to "hear" other users "shouts" as long as they are close enought to each other.
 
