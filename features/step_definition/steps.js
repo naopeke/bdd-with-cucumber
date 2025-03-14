@@ -42,12 +42,17 @@ When('Sean shouts {string}', function (message) {
     this.messageFromSean = message;
 });
 
+When('Sean shouts the following message', function(message){
+    this.people['Sean'].shout(message);
+    this.messageFromSean = message;
+})
+
 Then('Lucy should hear a shout', function () {
     assertThat(this.people['Lucy'].messagesHeard().length, is(1)); // Lucy がメッセージを受信したことを確認
 });
 
-Then('Larry should not hear a shout', function () {
-    assertThat(this.people['Larry'].messagesHeard(), not(contains(this.messageFromSean))); // Larry がメッセージを受信していないことを確認
+Then('{word} should not hear a shout', function (name) {
+    assertThat(this.people[name].messagesHeard(), not(contains(this.messageFromSean))); // Larry がメッセージを受信していないことを確認
 });
 
 Then('Lucy hears Sean\'s message', function () {

@@ -30,11 +30,19 @@ class Network {
     }
 
     broadcast(message, shouterLocation) {
-        this.listeners.forEach(listener => {
-            if (Math.abs(listener.location - shouterLocation) <= this.range) {
-                listener.hear(message); // 範囲内のリスナーにメッセージを送信
-            }
-        });
+        // this.listeners.forEach(listener => {
+        //     if (Math.abs(listener.location - shouterLocation) <= this.range) {
+        //         listener.hear(message); // 範囲内のリスナーにメッセージを送信
+        //     }
+        // });
+        this.listeners.forEach(listener =>{
+            let withinRange = Math.abs(listener.location - shouterLocation) <= this.range;
+            let shortEnough = message.length <= 180;
+
+            if(withinRange)
+                if(shortEnough)
+                    listener.hear(message);
+        })
     }
 }
 
