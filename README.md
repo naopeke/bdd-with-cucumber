@@ -42,3 +42,21 @@ help command
 npm test -- --help
 npm test -- -h
 ```
+  
+## Formatter plugins
+```
+npm test -- --format html:report.html
+npm test -- --format json:report.json
+npm test -- --format progress
+npm test -- -f html:report.html -f json:report.json -f progress
+```
+Rerun and make a txt file with the failed scenarios
+```
+npm test -- -f rerun:@rerun.tx
+```
+  
+## Cucumber report
+cucumber.js
+```
+module.exports = { default: '--publish' }
+```
