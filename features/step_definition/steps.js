@@ -33,6 +33,16 @@ When('Sean shouts a message containing the word {string}', function(word){
     this.messagesShoutedBy["Sean"].push(message);
 });
 
+When('Sean shouts {int} messages containing the word {string}', function(count, word){
+    for(let i=0; i<count; i++){
+        const message = `A message containing the word ${word}`;
+        this.people['Sean'].shout(message);
+        if(!this.messagesShoutedBy["Sean"]) 
+            this.messagesShoutedBy["Sean"] =[]
+        this.messagesShoutedBy["Sean"].push(message);
+    }
+});
+
 When('Sean shouts a message', function(message){
     const mesasge = "A message from Sean";
     this.people['Sean'].shout(message);
@@ -48,6 +58,26 @@ When('Sean shouts a long message', function(message){
         this.messagesShoutedBy["Sean"] =[]
     this.messagesShoutedBy["Sean"].push(message);
 })
+
+When('Sean shouts an over-long message', function() {
+    const baseMessage = "A message from Sean that is 181 characters long ";
+    const longMessage = baseMessage + "x".repeat(181 - baseMessage.length); // 変数名を変更
+    this.people['Sean'].shout(longMessage);
+    if(!this.messagesShoutedBy["Sean"]) 
+        this.messagesShoutedBy["Sean"] = []
+    this.messagesShoutedBy["Sean"].push(longMessage);
+});
+
+When('Sean shouts {int} over-long messages', function(count){
+    for(let i = 0; i < count; i++){
+        const baseMessage = "A message from Sean that is 181 characters long ";
+        const longMessage = baseMessage + "x".repeat(181 - baseMessage.length); // 変数名を変更
+        this.people['Sean'].shout(longMessage);
+        if(!this.messagesShoutedBy["Sean"]) 
+            this.messagesShoutedBy["Sean"] = []
+        this.messagesShoutedBy["Sean"].push(longMessage);
+    }
+});
 
 When('Sean shouts the following message', function(message){
     this.people['Sean'].shout(message);
