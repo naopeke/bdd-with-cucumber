@@ -1,48 +1,47 @@
-@SHOUTY-11
-Feature: Hear shout
-    shouty allows users to "hear" other users "shouts" as long as they are close enought to each other.
+Feature: Premium account
 
-    To do:
-        - only shout to people within a certain distance
-    
-    Rule: Shouts should only be heard if listener is within range
+  Rules:
+  * Mention the word "buy" and you lose 5 credits.
+  * Long messages cost 2 credits
 
-        Scenario: Listener is within range
-            Given the range is 100
-            And people are located at
-            | name     | Sean | Lucy |
-            | location |  0   | 50   |
-            When Sean shouts
-            Then Lucy should hear a shout
+  Background:
+    Given the range is 100
+    And people are located at
+      | name     | Sean | Lucy |
+      | location | 0    | 100  |
 
-        Scenario: Listener is out of range
-            Given the range is 100
-            And people are located at
-            | name     | Sean | Larry |
-            | location |  0   | 150   |
-            When Sean shouts
-            Then Larry should not hear a shout
+ Scenario: Test premium account features
+    Given Sean has bought 30 credits
+    When Sean shouts a message containing the word "buy"
+    And Sean shouts a message
+    And Sean shouts a message
+    And Sean shouts a long message
+    And Sean shouts a message
+    And Sean shouts the following message
+      """
+      This morning I got up early and baked some
+      bagels especially for you. Then I fried some
+      sausages. I went out to see my chickens, they
+      had some delicious fresh eggs waiting for me
+      and I scrambled them just for you. Come on over
+      and let's eat breakfast!
+      """
+    And Sean shouts a message
+    And Sean shouts the following message
+      """
+      Here are some things you will love about Sean's:
+      - the bagels
+      - the coffee
+      - the chickens
+      Come and visit us today! We'd really love to see you.
+      Pop round anytime, honestly it's fine.
+      """
+    And Sean shouts a message
+    Then Lucy hears all Sean's messages
+    And Sean should have 11 credits
 
-    Rule: Listener should be able to hear multiple shouts
-        Scenario: Two shouts
-            Given a person named Sean
-            And a person named Lucy
-            When Sean shouts "Free bagles!"
-            And Sean shouts "Free toast!"
-            Then Lucy hears the following messages:
-                | Free bagles! |
-                | Free toast!  |
-    
-    Rule:  Maximum length of message is 180 characters
-        Scenario: Message is too long
-        Given a person named Sean
-        And a person named Lucy
-        When Sean shouts the following message
-        """
-        This is a really long message
-        so long in fact that I am not going to
-        be allowed to send it, at least if I keep
-        typing like this until the length is over
-        the limit of 180 characters.
-        """
-        Then Lucy should not hear a shout
+  @todo
+  Scenario: BUG #2789
+    Given Sean has bought 30 credits
+    When Sean shouts "buy, buy buy!"
+    Then Sean should have 25 credits

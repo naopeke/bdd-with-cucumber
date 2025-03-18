@@ -10,28 +10,9 @@ Before(function () {
     this.people = {}; // people オブジェクトを初期化
 });
 
-Given('the range is {int}', function (range) {
-    this.network = new Network(range); // 範囲を設定
-});
-
-Given('a person named {word}', function (name) {
-    this.people[name] = new Person(this.network, 0); // 初期位置を 0 として Person インスタンスを作成
-});
-
-Given('a person named {word} is located at {int}', function (name, location) {
-    this.people[name] = new Person(this.network, location); // Person インスタンスを作成し、位置を設定
-});
-
-Given('people are located at', function (dataTable) {
-    console.log(dataTable.raw(2,1));
-    console.log(dataTable.hashes());
-    // dataTable.hashes().map((person)=>{
-    //     this.people[person.name] = new Person(this.network, person.location)
-    // })
-    dataTable.transpose().hashes().map((person) => {
-        this.people[person.name] = new Person(this.network, person.location);
-    });
-});
+Given("Sean has bought {int} credits", function(credits){
+    this.people["Sean"].credits = credits;
+})
 
 When('Sean shouts', function () {
     this.people['Sean'].shout('Hello world'); // Sean がメッセージを叫ぶ
@@ -39,12 +20,40 @@ When('Sean shouts', function () {
 
 When('Sean shouts {string}', function (message) {
     this.people['Sean'].shout(message); // Sean がメッセージを叫ぶ
-    this.messageFromSean = message;
+    if(!this.messagesShoutedBy["Sean"]) 
+        this.messagesShoutedBy["Sean"] =[]
+    this.messagesShoutedBy["Sean"].push(message);
 });
+
+When('Sean shouts a message containing the word {string}', function(word){
+    const message = `A message containing the word ${word}`;
+    this.people['Sean'].shout(message);
+    if(!this.messagesShoutedBy["Sean"]) 
+        this.messagesShoutedBy["Sean"] =[]
+    this.messagesShoutedBy["Sean"].push(message);
+});
+
+When('Sean shouts a message', function(message){
+    const mesasge = "A message from Sean";
+    this.people['Sean'].shout(message);
+    if(!this.messagesShoutedBy["Sean"]) 
+        this.messagesShoutedBy["Sean"] =[]
+    this.messagesShoutedBy["Sean"].push(message);
+})
+
+When('Sean shouts a long message', function(message){
+    const mesasge =["A message from Sean", "that spans multiple lines"].join("\n") 
+    this.people['Sean'].shout(message);
+    if(!this.messagesShoutedBy["Sean"]) 
+        this.messagesShoutedBy["Sean"] =[]
+    this.messagesShoutedBy["Sean"].push(message);
+})
 
 When('Sean shouts the following message', function(message){
     this.people['Sean'].shout(message);
-    this.messageFromSean = message;
+    if(!this.messagesShoutedBy["Sean"]) 
+        this.messagesShoutedBy["Sean"] =[]
+    this.messagesShoutedBy["Sean"].push(message);
 })
 
 Then('Lucy should hear a shout', function () {

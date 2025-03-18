@@ -60,3 +60,8 @@ cucumber.js
 ```
 module.exports = { default: '--publish' }
 ```
+
+## not including
+```
+npm exec cucumber-js -- --tags "not @todo"
+```
