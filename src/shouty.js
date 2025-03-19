@@ -6,8 +6,12 @@ class Person {
         this.network.subscribe(this); // 自身をリスナーとして登録
     }
 
+    moveTo(newLocation){
+        this.location = newLocation;
+    }
+
     shout(message) {
-        this.network.broadcast(message, this.location); // Network にメッセージをブロードキャスト
+        this.network.broadcast(message, this.location, this); // Network にメッセージをブロードキャスト
     }
 
     hear(message) {
@@ -21,23 +25,27 @@ class Person {
 
 class Network {
     constructor(range) {
-        this.range = range; // メッセージが届く範囲
-        this.listeners = [];
+        this._range = range; // メッセージが届く範囲
+        this._listeners = [];
+    }
+
+    set range(newRange){
+        this._range = newRange;
     }
 
     subscribe(listener) {
-        this.listeners.push(listener); // リスナーを追加
+        this._listeners.push(listener); // リスナーを追加
     }
 
-    broadcast(message, shouterLocation) {
+    broadcast(message, shouterLocation, shouter) {
         const shortEnough = message.length <= 180;
         this._deductCredits(shortEnough, message, shouter);
-        this.listeners.forEach(listener =>{
-            const withinRange = Math.abs(listener.location - shouterLocation) <= this.range;
-            if(withinRange && (shortEnough || shouter.credits >= 0)){
-                listener.hear(message)
+        this._listeners.forEach(listener => {
+            const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
+            if (withinRange && (shortEnough || shouter.credits >= 0)) {
+                listener.hear(message);
             }
-        })
+        });
     }
 
     _deductCredits(shortEnough, message, shouter){
