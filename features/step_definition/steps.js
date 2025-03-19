@@ -8,101 +8,89 @@ const default_range = 100;
 Before(function () {
     this.network = new Network(default_range);
     this.people = {}; // people オブジェクトを初期化
+    this.messagesShoutedBy = {};
 });
 
-Given("Sean has bought {int} credits", function(credits){
-    this.people["Sean"].credits = credits;
+Given("the range is {int}", function(range){
+    this.network = new Network(range);
 })
 
-When('Sean shouts', function () {
-    this.people['Sean'].shout('Hello world'); // Sean がメッセージを叫ぶ
+Given("{person} is located at {int}", function(person, location){
+    person.moveTo(location);
+})
+
+Given("{person} has bought {int} credits", function(person, credits){
+    person.credits = credits;
+})
+
+When('{person} shouts', function (shouter) {
+    const message = "Hello, world";
+    this.shout({from: shouter, message});
 });
 
-When('Sean shouts {string}', function (message) {
-    this.people['Sean'].shout(message); // Sean がメッセージを叫ぶ
-    if(!this.messagesShoutedBy["Sean"]) 
-        this.messagesShoutedBy["Sean"] =[]
-    this.messagesShoutedBy["Sean"].push(message);
-});
+When('{person} shouts {string}', function(shouter, message){
+    this.shout({from: shouter, message});
+    this.messagesShoutedBy[shouter.name].push(message);
+})
 
-When('Sean shouts a message containing the word {string}', function(word){
+When('{person} shouts a message containing the word {string}', function(shouter, word){
     const message = `A message containing the word ${word}`;
-    this.people['Sean'].shout(message);
-    if(!this.messagesShoutedBy["Sean"]) 
-        this.messagesShoutedBy["Sean"] =[]
-    this.messagesShoutedBy["Sean"].push(message);
+    this.shout({from: shouter, message});
+    this.messagesShoutedBy[shouter.name].push(message);
 });
 
-When('Sean shouts {int} messages containing the word {string}', function(count, word){
+When('{person} shouts {int} messages containing the word {string}', function(shouter, count, word){
     for(let i=0; i<count; i++){
         const message = `A message containing the word ${word}`;
-        this.people['Sean'].shout(message);
-        if(!this.messagesShoutedBy["Sean"]) 
-            this.messagesShoutedBy["Sean"] =[]
-        this.messagesShoutedBy["Sean"].push(message);
+        this.shout({from: shouter, message});
+        this.messagesShoutedBy[shouter.name].push(message);
     }
 });
 
-When('Sean shouts a message', function(message){
-    const mesasge = "A message from Sean";
-    this.people['Sean'].shout(message);
-    if(!this.messagesShoutedBy["Sean"]) 
-        this.messagesShoutedBy["Sean"] =[]
-    this.messagesShoutedBy["Sean"].push(message);
+When('{person} shouts a long message', function(shouter){
+    const longMessage =`A message from ${shouter.name}\nthat spans multiple lines`;
+    this.shout({from: shouter, longMessage});
+    this.messagesShoutedBy[shouter.name].push(longMessage);
 })
 
-When('Sean shouts a long message', function(message){
-    const mesasge =["A message from Sean", "that spans multiple lines"].join("\n") 
-    this.people['Sean'].shout(message);
-    if(!this.messagesShoutedBy["Sean"]) 
-        this.messagesShoutedBy["Sean"] =[]
-    this.messagesShoutedBy["Sean"].push(message);
-})
-
-When('Sean shouts an over-long message', function() {
-    const baseMessage = "A message from Sean that is 181 characters long ";
+When('{person} shouts an over-long message', function(shouter) {
+    const baseMessage = "A message from ${shouter.name} that is 181 characters long ";
     const longMessage = baseMessage + "x".repeat(181 - baseMessage.length); // 変数名を変更
-    this.people['Sean'].shout(longMessage);
-    if(!this.messagesShoutedBy["Sean"]) 
-        this.messagesShoutedBy["Sean"] = []
-    this.messagesShoutedBy["Sean"].push(longMessage);
+    this.shout({from: shouter, longMessage});
+    this.messagesShoutedBy[shouter.name].push(longMessage);
 });
 
-When('Sean shouts {int} over-long messages', function(count){
+When('{person} shouts {int} over-long messages', function(shouter, count){
     for(let i = 0; i < count; i++){
-        const baseMessage = "A message from Sean that is 181 characters long ";
+        const baseMessage = "A message from {shouter.name} that is 181 characters long ";
         const longMessage = baseMessage + "x".repeat(181 - baseMessage.length); // 変数名を変更
-        this.people['Sean'].shout(longMessage);
-        if(!this.messagesShoutedBy["Sean"]) 
-            this.messagesShoutedBy["Sean"] = []
+        this.shout({from: shouter, longMessage});
         this.messagesShoutedBy["Sean"].push(longMessage);
     }
 });
 
-When('Sean shouts the following message', function(message){
-    this.people['Sean'].shout(message);
-    if(!this.messagesShoutedBy["Sean"]) 
-        this.messagesShoutedBy["Sean"] =[]
-    this.messagesShoutedBy["Sean"].push(message);
+When('{person} shouts the following message', function(shouter, message){
+    this.shout({from: shouter, message});
+    this.messagesShoutedBy[shouter.name].push(message);
 })
 
-Then('Lucy should hear a shout', function () {
-    assertThat(this.people['Lucy'].messagesHeard().length, is(1)); // Lucy がメッセージを受信したことを確認
+Then('{person} should hear a shout', function (listener) {
+    assertThat(this.people[listener.nae].messagesHeard().length, is(1)); // Lucy がメッセージを受信したことを確認
 });
 
-Then('{word} should not hear a shout', function (name) {
-    assertThat(this.people[name].messagesHeard(), not(contains(this.messageFromSean))); // Larry がメッセージを受信していないことを確認
+Then('{person} should not hear a shout', function (listener) {
+    assertThat(listener.messagesHeard().length, is(0));
 });
 
-Then('Lucy hears Sean\'s message', function () {
-    assertThat(this.people['Lucy'].messagesHeard(), is([this.messageFromSean])); // Lucy が Sean のメッセージを受信したことを確認
-});
+// Then('Lucy hears Sean\'s message', function () {
+//     assertThat(this.people['Lucy'].messagesHeard(), is([this.messageFromSean])); // Lucy が Sean のメッセージを受信したことを確認
+// });
 
-Then('Larry should not hear Sean\'s message', function () {
-    assertThat(this.people['Larry'].messagesHeard(), is([this.messageFromSean])); // Larry が Sean のメッセージを受信していないことを確認
-});
+// Then('Larry should not hear Sean\'s message', function () {
+//     assertThat(this.people['Larry'].messagesHeard(), is([this.messageFromSean])); // Larry が Sean のメッセージを受信していないことを確認
+// });
 
-Then('Lucy hears the following messages:', function (expectedMessages) {
-    let actualMessages = this.people['Lucy'].messagesHeard();
-    assert.deepEqual(actualMessages, expectedMessages.raw().flat()); // メッセージを比較
+Then('{person} hears the following messages:', function (listener, expectedMessages) {
+    let actualMessages = listener.messagesHeard().map((message) => [message]);
+    assertThat(actualMessages, is(expectedMessages.raw())); // 修正
 });
