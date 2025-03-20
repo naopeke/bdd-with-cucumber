@@ -36,8 +36,14 @@ class Network {
         this._range = newRange;
     }
 
+    // subscribe(listener) {
+    //     this._listeners.push(listener); // リスナーを追加
+    // }
     subscribe(listener) {
-        this._listeners.push(listener); // リスナーを追加
+        // 既に登録されている場合は追加しない
+        if (!this._listeners.includes(listener)) {
+            this._listeners.push(listener); 
+        }
     }
 
     // broadcast(message, shouterLocation, shouter) {
@@ -71,22 +77,43 @@ class Network {
     //     });
     // }
     
-    broadcast(message, shouterLocation, shouter) {
-        console.log(`Broadcasting message: "${message}" from ${shouter.name} at ${shouterLocation}`);
-        console.log(`Listeners registered: ${this._listeners.map(l => l.name).join(', ')}`);
-
-        this._listeners.forEach(listener => {
-            console.log(`Checking listener: ${listener.name} at ${listener.location}`);
-            const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
-            console.log(`Within range? ${withinRange}`);
+    // broadcast(message, shouterLocation, shouter) {
+    //     console.log(`Broadcasting message:\n "${message}" from ${shouter.name} at ${shouterLocation}`);
+    //     console.log(`Listeners registered:\n ${this._listeners.map(l => l.name).join(', ')}`);
     
-            if (withinRange) {
-                console.log(`${listener.name} hears: ${message}`); // リスナーがメッセージを受け取った場合のログ
-                listener.hear(message);
+    //     this._listeners.forEach(listener => {
+    //         // shouterがlistenerでない場合のみ処理
+    //         if (listener !== shouter) {
+    //             console.log(`Checking listener:\n ${listener.name} at ${listener.location}`);
+    //             const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
+    //             console.log(`Within range?\n ${withinRange}`);
+            
+    //             if (withinRange) {
+    //                 console.log(`${listener.name} hears:\n ${message}`); // リスナーがメッセージを受け取った場合のログ
+    //                 listener.hear(message);
+    //             }
+    //         }
+    //     });
+    // }
+    
+    broadcast(message, shouterLocation, shouter) {
+        console.log(`Broadcasting message:\n "${message}" from ${shouter.name} at ${shouterLocation}`);
+        console.log(`Listeners registered:\n ${this._listeners.map(l => l.name).join(', ')}`);
+        
+        this._listeners.forEach(listener => {
+            // shouterがlistenerでない場合のみ処理
+            if (listener !== shouter) {
+                console.log(`Checking listener:\n ${listener.name} at ${listener.location}`);
+                const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
+                console.log(`Within range?\n ${withinRange}`);
+            
+                if (withinRange) {
+                    console.log(`${listener.name} hears:\n ${message}`); // リスナーがメッセージを受け取った場合のログ
+                    listener.hear(message);
+                }
             }
         });
     }
-    
 
     _deductCredits(shortEnough, message, shouter){
         if(!shortEnough) shouter.credits -= 2;

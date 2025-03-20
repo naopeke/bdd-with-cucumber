@@ -83,16 +83,27 @@ When("{person} shouts {string}", function (shouter, message) {
     })
     
 //premium_account.feature
-When("{person} shouts {int} messages containing the word {string}",
-function (shouter, count, word) {
+// When("{person} shouts {int} messages containing the word {string}",
+// function (shouter, count, word) {
+//     for (let i = 0; i < count; i++) {
+//     const message = `A message containing the word ${word}`
+//     console.log(`Some Shouting message: "${count}${message}"`);
+//     this.shout({ from: shouter, message })
+//     this.messagesShoutedBy[shouter.name].push(message);
+//     }
+// }
+// )
+When("{person} shouts {int} messages containing the word {string}", function (shouter, count, word) {
     for (let i = 0; i < count; i++) {
-    const message = `A message containing the word ${word}`
-    console.log(`Some Shouting message: "${count}${message}"`);
-    this.shout({ from: shouter, message })
-    this.messagesShoutedBy[shouter.name].push(message);
+        const message = `A message containing the word ${word}`;
+        console.log(`${count} shouting messages: "${message}"`);
+        // 発信者 (shouter) を指定して、shout メソッドを呼び出し
+        shouter.shout(message);
+        // 発信者の名前とメッセージを記録
+        this.messagesShoutedBy[shouter.name] = this.messagesShoutedBy[shouter.name] || [];
+        this.messagesShoutedBy[shouter.name].push(message);
     }
-}
-)
+});
 
 //premium_account.feature
 When("{person} shouts {int} over-long messages", function (shouter, count) {
