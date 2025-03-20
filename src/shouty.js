@@ -56,21 +56,36 @@ class Network {
     //     });
     // }
 
+    // broadcast(message, shouterLocation, shouter) {
+    //     console.log(`Broadcasting message: "${message}" from ${shouter.name} at ${shouterLocation}`);
+    //     console.log(`Listeners registered: ${this._listeners.map(l => l.name).join(', ')}`);
+    
+    //     this._listeners.forEach(listener => {
+    //         console.log(`Checking listener: ${listener.name} at ${listener.location}`);
+    //         const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
+    //         console.log(`Within range? ${withinRange}`);
+    
+    //         if (withinRange) {
+    //             listener.hear(message);
+    //         }
+    //     });
+    // }
+    
     broadcast(message, shouterLocation, shouter) {
         console.log(`Broadcasting message: "${message}" from ${shouter.name} at ${shouterLocation}`);
         console.log(`Listeners registered: ${this._listeners.map(l => l.name).join(', ')}`);
-    
+
         this._listeners.forEach(listener => {
             console.log(`Checking listener: ${listener.name} at ${listener.location}`);
             const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
             console.log(`Within range? ${withinRange}`);
     
             if (withinRange) {
+                console.log(`${listener.name} hears: ${message}`); // リスナーがメッセージを受け取った場合のログ
                 listener.hear(message);
             }
         });
     }
-    
     
 
     _deductCredits(shortEnough, message, shouter){

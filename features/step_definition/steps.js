@@ -76,9 +76,9 @@ When("{person} shouts", function (shouter) {
 
 //premium_account.feature
 When("{person} shouts {string}", function (shouter, message) {
-    console.log(`${shouter.name} is shouting: "${message}"`);
+    // console.log(`${shouter.name} is shouting: "${message}"`);
     this.shout({ from: shouter, message });
-    console.log("Messages shouted so far:", this.messagesShoutedBy);
+    // console.log("Messages shouted so far:", this.messagesShoutedBy);
     this.messagesShoutedBy[shouter.name].push(message);
     })
     
@@ -87,6 +87,7 @@ When("{person} shouts {int} messages containing the word {string}",
 function (shouter, count, word) {
     for (let i = 0; i < count; i++) {
     const message = `A message containing the word ${word}`
+    console.log(`Some Shouting message: "${count}${message}"`);
     this.shout({ from: shouter, message })
     this.messagesShoutedBy[shouter.name].push(message);
     }
@@ -117,7 +118,7 @@ Then('{person} hears the following messages:', function (listener, expectedMessa
 
 //hear_shout.feature
 Then("{person} should hear {person}'s message", function(listener, shouter) {
-    console.log(`${listener.name} heard:`, listener.messagesHeard());
+    // console.log(`${listener.name} heard:`, listener.messagesHeard());
     assertThat(listener.messagesHeard()[0], equalTo(this.messagesShoutedBy[shouter.name][0]));
 });
 
@@ -133,6 +134,8 @@ Then('{person} should not hear a shout', function (listener) {
 
 //premium_account.feature
 Then("{person} hears all {person}'s messages", function(listener, shouter) {
+    console.log(`Listener's messages: ${listener.messagesHeard()}`);
+    console.log(`Shouter's messages: ${this.messagesShoutedBy[shouter.name]}`);
     assertThat(listener.messagesHeard(), equalTo(this.messagesShoutedBy[shouter.name]));
 });
 
