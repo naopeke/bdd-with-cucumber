@@ -7,8 +7,9 @@ Questions:
   Background:
     Given the range is 100
     And people are located at
-      | name     | Sean | Lucy |
-      | location | 0    | 100  |
+       | name  | location |
+       | Sean  | 0        |
+       | Lucy  | 100      |
 
   @todo
   Scenario: BUG #2789

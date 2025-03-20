@@ -1,8 +1,9 @@
 class Person {
-    constructor(network, location) {
+    constructor(network, location, name) {
         this.messages = [];
         this.network = network;
-        this.location = location; // 初期位置を設定
+        this.location = location;
+        this.name = name;
         this.network.subscribe(this); // 自身をリスナーとして登録
     }
 
@@ -11,10 +12,12 @@ class Person {
     }
 
     shout(message) {
+        console.log(`Shouting message: ${message}`);
         this.network.broadcast(message, this.location, this); // Network にメッセージをブロードキャスト
     }
 
     hear(message) {
+        console.log(`${this.name} heard: ${message}`);
         this.messages.push(message); // メッセージを受信
     }
 
@@ -37,16 +40,38 @@ class Network {
         this._listeners.push(listener); // リスナーを追加
     }
 
+    // broadcast(message, shouterLocation, shouter) {
+    //     console.log(`Broadcasting message: "${message}" from ${shouter.name} at ${shouterLocation}`);
+    //     console.log(`Listeners registered: ${this._listeners.map(l => l.name).join(', ')}`);
+        
+    //     this._listeners.forEach(listener => {
+    //         console.log(`Checking listener: ${listener.name} at ${listener.location}`);
+            
+    //         const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
+    //         console.log(`Within range? ${withinRange}`);
+    
+    //         if (withinRange) {
+    //             listener.hear(message);
+    //         }
+    //     });
+    // }
+
     broadcast(message, shouterLocation, shouter) {
-        const shortEnough = message.length <= 180;
-        this._deductCredits(shortEnough, message, shouter);
+        console.log(`Broadcasting message: "${message}" from ${shouter.name} at ${shouterLocation}`);
+        console.log(`Listeners registered: ${this._listeners.map(l => l.name).join(', ')}`);
+    
         this._listeners.forEach(listener => {
+            console.log(`Checking listener: ${listener.name} at ${listener.location}`);
             const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
-            if (withinRange && (shortEnough || shouter.credits >= 0)) {
+            console.log(`Within range? ${withinRange}`);
+    
+            if (withinRange) {
                 listener.hear(message);
             }
         });
     }
+    
+    
 
     _deductCredits(shortEnough, message, shouter){
         if(!shortEnough) shouter.credits -= 2;
