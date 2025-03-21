@@ -10,10 +10,3 @@ defineParameterType({
         return this.people[name] = this.people[name] || new Person(this.network, 0, name); // nameを渡す
     }
 });
-
-
-// defineParameterType({
-//     name: 'person',
-//     regexp: /Lucy|Sean/,
-//     transformer: name => new Person(new Network())
-// });
