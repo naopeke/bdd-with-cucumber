@@ -19,52 +19,18 @@ Given("{person} is located at {int}", function(person, location){
     person.moveTo(location);
 })
 
-//hear_shout.feature
-//premium_account.feature
-// Given('people are located at', function (dataTable) {
-//     const peopleData = dataTable.hashes(); // [{ name: "Sean", location: "0" }, { name: "Lucy", location: "100" }]
-//     this.people = {};
-
-//     peopleData.forEach(person => {
-//         this.people[person.name] = { location: parseInt(person.location, 10) };
-//     });
-// });
-
-
 Given("people are located at", function (dataTable) {
     dataTable.rows().forEach(([name, location]) => {
         this.people[name] = new Person(this.network, parseInt(location, 10), name);
-        console.log("name:" ,name, "location",location)
+        // console.log("name:" ,name, "location",location)
         this.messagesShoutedBy[name] = [];
     });
 });
 
-// Given("people are located at", function (dataTable) {
-//     // dataTable.rows() を利用して、ヘッダーをスキップして位置情報を処理
-//     const rows = dataTable.rows().slice(1); // ヘッダー行を除く
-
-//     rows.forEach(row => {
-//         const name = row[0]; // 名前は1列目
-//         const location = parseInt(row[1], 10); // 位置は2列目
-
-//         // デバッグ用に名前と位置を表示
-//         console.log(`Creating person: ${name} at location: ${location}`);
-        
-//         // 名前と位置を使ってPersonを作成
-//         this.people[name] = new Person(this.network, location, name);
-//         this.messagesShoutedBy[name] = [];
-
-//         // 作成された情報をログに出力
-//         console.log(`Person ${name} created with location ${location}`);
-//     });
-// });
-
-
-
-
 //premium_account.feature
 Given("{person} has bought {int} credits", function(person, credits){
     person.credits = credits;
+    console.log(`${person.name} initially has ${credits} credits.`);
 })
 
 When("{person} shouts", function (shouter) {
@@ -96,7 +62,7 @@ When("{person} shouts {string}", function (shouter, message) {
 When("{person} shouts {int} messages containing the word {string}", function (shouter, count, word) {
     for (let i = 0; i < count; i++) {
         const message = `A message containing the word ${word}`;
-        console.log(`${count} shouting messages: "${message}"`);
+        // console.log(`${count} shouting messages: "${message}"`);
         // 発信者 (shouter) を指定して、shout メソッドを呼び出し
         shouter.shout(message);
         // 発信者の名前とメッセージを記録
@@ -145,12 +111,13 @@ Then('{person} should not hear a shout', function (listener) {
 
 //premium_account.feature
 Then("{person} hears all {person}'s messages", function(listener, shouter) {
-    console.log(`Listener's messages: ${listener.messagesHeard()}`);
-    console.log(`Shouter's messages: ${this.messagesShoutedBy[shouter.name]}`);
+    // console.log(`Listener's messages: ${listener.messagesHeard()}`);
+    // console.log(`Shouter's messages: ${this.messagesShoutedBy[shouter.name]}`);
     assertThat(listener.messagesHeard(), equalTo(this.messagesShoutedBy[shouter.name]));
 });
 
 //premium_account.feature
 Then("{person} should have {int} credits", function(person, expectedCredits) {
+    console.log(`${person.name} should have ${person.credits} credits, expected: ${expectedCredits}`);
     assertThat(person.credits, is(expectedCredits));
 });

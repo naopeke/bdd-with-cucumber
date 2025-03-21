@@ -12,12 +12,14 @@ class Person {
     }
 
     shout(message) {
-        console.log(`Shouting message: ${message}`);
+        // console.log(`Shouting message: ${message}`);
+        const shortEnough = message.length <= 180;
+        this.network._deductCredits(shortEnough, message, this); // クレジット減算
         this.network.broadcast(message, this.location, this); // Network にメッセージをブロードキャスト
     }
 
     hear(message) {
-        console.log(`${this.name} heard: ${message}`);
+        // console.log(`${this.name} heard: ${message}`);
         this.messages.push(message); // メッセージを受信
     }
 
@@ -45,52 +47,20 @@ class Network {
             this._listeners.push(listener); 
         }
     }
-
-    // broadcast(message, shouterLocation, shouter) {
-    //     console.log(`Broadcasting message: "${message}" from ${shouter.name} at ${shouterLocation}`);
-    //     console.log(`Listeners registered: ${this._listeners.map(l => l.name).join(', ')}`);
-        
-    //     this._listeners.forEach(listener => {
-    //         console.log(`Checking listener: ${listener.name} at ${listener.location}`);
-            
-    //         const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
-    //         console.log(`Within range? ${withinRange}`);
-    
-    //         if (withinRange) {
-    //             listener.hear(message);
-    //         }
-    //     });
-    // }
-
-    // broadcast(message, shouterLocation, shouter) {
-    //     console.log(`Broadcasting message: "${message}" from ${shouter.name} at ${shouterLocation}`);
-    //     console.log(`Listeners registered: ${this._listeners.map(l => l.name).join(', ')}`);
-    
-    //     this._listeners.forEach(listener => {
-    //         console.log(`Checking listener: ${listener.name} at ${listener.location}`);
-    //         const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
-    //         console.log(`Within range? ${withinRange}`);
-    
-    //         if (withinRange) {
-    //             listener.hear(message);
-    //         }
-    //     });
-    // }
-   
     
     broadcast(message, shouterLocation, shouter) {
-        console.log(`Broadcasting message:\n "${message}" from ${shouter.name} at ${shouterLocation}`);
-        console.log(`Listeners registered:\n ${this._listeners.map(l => l.name).join(', ')}`);
+        // console.log(`Broadcasting message:\n "${message}" from ${shouter.name} at ${shouterLocation}`);
+        // console.log(`Listeners registered:\n ${this._listeners.map(l => l.name).join(', ')}`);
         
         this._listeners.forEach(listener => {
             // shouterがlistenerでない場合のみ処理
             if (listener !== shouter) {
-                console.log(`Checking listener:\n ${listener.name} at ${listener.location}`);
+                // console.log(`Checking listener:\n ${listener.name} at ${listener.location}`);
                 const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
-                console.log(`Within range?\n ${withinRange}`);
+                // console.log(`Within range?\n ${withinRange}`);
             
                 if (withinRange) {
-                    console.log(`${listener.name} hears:\n ${message}`); // リスナーがメッセージを受け取った場合のログ
+                    // console.log(`${listener.name} hears:\n ${message}`); // リスナーがメッセージを受け取った場合のログ
                     listener.hear(message);
                 }
             }
@@ -98,8 +68,10 @@ class Network {
     }
 
     _deductCredits(shortEnough, message, shouter){
+        console.log(`Before deduction, ${shouter.name} has ${shouter.credits} credits.`);
         if(!shortEnough) shouter.credits -= 2;
         shouter.credits -= (message.match(/buy/gi) || []).length * 5;
+        console.log(`After deduction, ${shouter.name} has ${shouter.credits} credits.`);
     }
 }
 
