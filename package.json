@@ -15,6 +15,7 @@
     "hamjest": "^4.1.0"
   },
   "dependencies": {
-    "chai": "^5.2.0"
+    "chai": "^5.2.0",
+    "sinon": "^19.0.4"
   }
 }

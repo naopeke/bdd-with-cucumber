@@ -76,25 +76,7 @@ class Network {
     //         }
     //     });
     // }
-    
-    // broadcast(message, shouterLocation, shouter) {
-    //     console.log(`Broadcasting message:\n "${message}" from ${shouter.name} at ${shouterLocation}`);
-    //     console.log(`Listeners registered:\n ${this._listeners.map(l => l.name).join(', ')}`);
-    
-    //     this._listeners.forEach(listener => {
-    //         // shouterがlistenerでない場合のみ処理
-    //         if (listener !== shouter) {
-    //             console.log(`Checking listener:\n ${listener.name} at ${listener.location}`);
-    //             const withinRange = Math.abs(listener.location - shouterLocation) <= this._range;
-    //             console.log(`Within range?\n ${withinRange}`);
-            
-    //             if (withinRange) {
-    //                 console.log(`${listener.name} hears:\n ${message}`); // リスナーがメッセージを受け取った場合のログ
-    //                 listener.hear(message);
-    //             }
-    //         }
-    //     });
-    // }
+   
     
     broadcast(message, shouterLocation, shouter) {
         console.log(`Broadcasting message:\n "${message}" from ${shouter.name} at ${shouterLocation}`);
